@@ -1,0 +1,37 @@
+{
+  "name": "lottery-scraper",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "keywords": [
+    "web-scraping",
+    "lottery",
+    "puppeteer",
+    "mysql",
+    "cron"
+  ],
+  "author": "Francis Castillo",
+  "license": "MIT",
+  "description": "Aplicación para extraer datos de la loteriard.com",
+  "dependencies": {
+    "@libsql/client": "^0.15.9",
+    "axios": "^1.7.9",
+    "cheerio": "^1.1.0",
+    "dotenv": "^17.0.1",
+    "drizzle-orm": "^0.44.2",
+    "node-cron": "^4.2.0",
+    "puppeteer": "^24.1.1",
+    "whatwg-mimetype": "^4.0.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.4",
+    "tsx": "^4.20.3"
+  }
+}
