@@ -112,7 +112,7 @@ export class LotteryScraper {
         if (existing.length === 0) {
           await db.insert(lotteryResults).values({
             lottery_name: result.gameName,
-            SessionDate: result.sessionDate,
+            sessionDate: result.sessionDate,
             numbers: JSON.stringify(result.numbers),
             scrapedAt: result.scrapedAt,
           });

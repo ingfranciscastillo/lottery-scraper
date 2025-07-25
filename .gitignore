@@ -13,6 +13,7 @@ yarn-error.log*
 
 # Database
 db/migrations/
+drizzle
 
 # Logs
 logs
