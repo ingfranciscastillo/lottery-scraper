@@ -35,6 +35,7 @@ export class LotteryScraper {
       console.log("Navegando a la página...");
       await this.page.goto(this.url, {
         waitUntil: "networkidle2",
+        timeout: 0, // Elimina el tiempo de espera de 30 segundos
       });
 
       console.log("Esperando a que carguen los resultados...");
