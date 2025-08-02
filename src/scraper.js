@@ -100,19 +100,25 @@ export class LotteryScraper {
       console.log("Guardando resultados en la base de datos...");
 
       for (const result of results) {
+        // Convertir la fecha de DD-MM a formato completo
+        const fullDate = this.convertToFullDate(result.sessionDate);
+
         // Verificar si el resultado ya existe
         const existing = await db
           .select()
           .from(lotteryResults)
           .where(
-            sql`lottery_name = ${result.gameName} AND session_date = ${result.sessionDate}`
+            sql`lottery_name = ${result.gameName} AND session_date = ${fullDate}`
           )
           .limit(1);
 
         if (existing.length === 0) {
+          // Convertir la fecha de DD-MM a formato completo
+          const fullDate = this.convertToFullDate(result.sessionDate);
+
           await db.insert(lotteryResults).values({
             lottery_name: result.gameName,
-            sessionDate: result.sessionDate,
+            sessionDate: fullDate,
             numbers: JSON.stringify(result.numbers),
             scrapedAt: result.scrapedAt,
           });
@@ -127,6 +133,51 @@ export class LotteryScraper {
     } catch (error) {
       console.error("Error guardando resultados:", error);
       throw error;
+    }
+  }
+
+  // Función para convertir fecha DD-MM a fecha completa en formato DD/MM/YYYY
+  convertToFullDate(dateString) {
+    try {
+      // Verificar si el formato es DD-MM
+      const dateRegex = /^(\d{1,2})-(\d{1,2})$/;
+      const match = dateString.match(dateRegex);
+
+      if (!match) {
+        throw new Error(`Formato de fecha inválido: ${dateString}`);
+      }
+
+      const day = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10);
+      const currentYear = new Date().getFullYear();
+
+      // Crear la fecha completa
+      const fullDate = new Date(currentYear, month - 1, day);
+
+      // Verificar si la fecha es válida
+      if (isNaN(fullDate.getTime())) {
+        throw new Error(`Fecha inválida: ${dateString}`);
+      }
+
+      // Si la fecha resultante es en el futuro, asumir que es del año anterior
+      if (fullDate > new Date()) {
+        fullDate.setFullYear(currentYear - 1);
+      }
+
+      // Formatear como DD/MM/YYYY
+      const formattedDay = day.toString().padStart(2, "0");
+      const formattedMonth = month.toString().padStart(2, "0");
+      const year = fullDate.getFullYear();
+
+      return `${formattedDay}-${formattedMonth}-${year}`;
+    } catch (error) {
+      console.error(`Error convirtiendo fecha ${dateString}:`, error.message);
+      // Retornar fecha actual como fallback en formato DD/MM/YYYY
+      const now = new Date();
+      const day = now.getDate().toString().padStart(2, "0");
+      const month = (now.getMonth() + 1).toString().padStart(2, "0");
+      const year = now.getFullYear();
+      return `${day}/${month}/${year}`;
     }
   }
 
