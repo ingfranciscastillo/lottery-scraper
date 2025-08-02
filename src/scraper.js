@@ -169,7 +169,7 @@ export class LotteryScraper {
       const formattedMonth = month.toString().padStart(2, "0");
       const year = fullDate.getFullYear();
 
-      return `${formattedDay}-${formattedMonth}-${year}`;
+      return `${formattedDay}/${formattedMonth}/${year}`;
     } catch (error) {
       console.error(`Error convirtiendo fecha ${dateString}:`, error.message);
       // Retornar fecha actual como fallback en formato DD/MM/YYYY
