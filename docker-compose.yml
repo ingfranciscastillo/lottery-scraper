@@ -1,0 +1,22 @@
+services:
+  scraper:
+    build: .
+    container_name: lottery-scraper
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      # Variables de entorno para Puppeteer
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+    volumes:
+      # Opcional: montar directorio para datos persistentes
+      - ./data:/usr/src/app/data
+      # Opcional: montar logs
+      - ./logs:/usr/src/app/logs
+    # Configuraciones adicionales para Chrome en contenedor
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_ADMIN

@@ -16,6 +16,7 @@ export class LotteryScraper {
       this.browser = await puppeteer.launch({
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        executablePath: "/usr/bin/google-chrome-stable",
       });
 
       this.page = await this.browser.newPage();
@@ -115,9 +116,11 @@ export class LotteryScraper {
         if (existing.length === 0) {
           // Convertir la fecha de DD-MM a formato completo
           const fullDate = this.convertToFullDate(result.sessionDate);
+          const normalizedGameName = this.normalizeText(result.gameName);
 
           await db.insert(lotteryResults).values({
             lottery_name: result.gameName,
+            lottery_name_normalized: normalizedGameName,
             sessionDate: fullDate,
             numbers: JSON.stringify(result.numbers),
             scrapedAt: result.scrapedAt,
@@ -134,6 +137,13 @@ export class LotteryScraper {
       console.error("Error guardando resultados:", error);
       throw error;
     }
+  }
+
+  normalizeText(text) {
+    return text
+      .normalize("NFD") // descompone caracteres con tildes
+      .replace(/[\u0300-\u036f]/g, "") // remueve tildes
+      .toLowerCase(); // todo a minúscula
   }
 
   // Función para convertir fecha DD-MM a fecha completa en formato DD/MM/YYYY

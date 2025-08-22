@@ -4,6 +4,7 @@ import { sql } from "drizzle-orm";
 export const lotteryResults = sqliteTable("lottery_results", {
   id: integer("id").primaryKey(),
   lottery_name: text("lottery_name").notNull(),
+  lottery_name_normalized: text("lottery_name_normalized").notNull(), // Nombre normalizado
   sessionDate: text("session_date").notNull(),
   numbers: text("numbers").notNull(), // JSON string con los números
   scrapedAt: text("scraped_at").default(sql`CURRENT_TIMESTAMP`),
