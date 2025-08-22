@@ -1,6 +1,8 @@
 services:
   scraper:
     build: .
+    env_file:
+      - .env
     container_name: lottery-scraper
     restart: unless-stopped
     ports:
