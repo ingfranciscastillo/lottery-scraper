@@ -16,7 +16,7 @@ export class LotteryScraper {
       this.browser = await puppeteer.launch({
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        executablePath: "/usr/bin/google-chrome-stable",
+        executablePath: "/usr/bin/chromium",
       });
 
       this.page = await this.browser.newPage();
